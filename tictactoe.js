@@ -89,7 +89,7 @@ const table = {
   }
 }
 const ai={
-  moveGen(){
+  easy(){
     let missingTable = table.missing;
     console.log("array : "+ai.array);
     let j=0;
@@ -109,8 +109,10 @@ const draw = {
   execute(id){
     console.log(id);
     let pos=0;
-    if(player.player)document.getElementById(id).innerHTML = player.currentSign;
-    else if(!player.player){
+    let human = player.player;
+    console.log("ki ez , csak nem a player? :"+human);
+    if(human)document.getElementById(id).innerHTML = player.currentSign;
+    else if(!human){
       //const player = player.player;
       console.log("id miutan random legeneralta: "+ id);
       console.log("missing table :" +table.missing);
@@ -120,18 +122,21 @@ const draw = {
     }
      draw.level = draw.level+1;
      console.log("hanyadik szint: "+draw.level);
-    if(player.player)
+    if(human)
       table.tablePush(id);
-    if(!player.player)
+    if(!human)
       table.tablePush(pos);
-    if(player.player)
+    if(human)
       table.emptySpace();
     console.log(table.table);
     if(draw.level>=5)term.check();
     player.switchOver();
     table.isFull(); 
     if(!player.player && !term.isTerm){
-      ai.moveGen();
+      if(player.choosen=='easy')
+        ai.easy();
+      if(player.choosen=='difficult')
+        ai.unbeaten();
     }
   }
 }
