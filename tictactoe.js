@@ -5,9 +5,7 @@ const click = {
     let id = event.toElement.id; 
     id = parseInt(id);
     let clicked = event.target.className;
-    if(clicked=='square' /*&& general.player===true*/){
-      draw.checkCond(id);
-     }
+    if(clicked=='square' )draw.checkCond(id);
   },
   notListening(){
     window.removeEventListener('click',click.listening);
@@ -17,18 +15,16 @@ const click = {
 //before that the set up of the player will take place based on provided settings via the modal UI
 const player={
   currentSign:'X',player :true, hSign:'X', aiSign:'O',choosen:'easy',
-  choice(id){
-    console.log('mit valasztottunk:'+id);
-  },
-  choose(){
-    console.log('choose sign');
+  set signs(sign){
     this.hSign = 'O';
     this.aiSign = this.hSign==='O' ? 'X' : 'O'; 
   },
   switchOver(){
-    if(this.player===true)player.player=false;
+    if(this.player)
+      this.player=false;
     else this.player=true;
-    if(this.currentSign=='X') this.currentSign='O';
+    if(this.currentSign=='X') 
+      this.currentSign='O';
     else this.currentSign='X';
   },
   reset(){
@@ -63,63 +59,56 @@ const term= {
 }
 const table = {
   full : false, already : false, table : [], aiTable:[], humanTable:[], tableFull : [1,2,3,4,5,6,7,8,9], missing : [],
- 
   emptySpace(){
     let tableCopy = this.table.map(value=>parseInt(value));
     table.missing = [];
     this.tableFull.forEach((value)=>{
       let ez= tableCopy.includes(value);
-      if(!ez)
-        this.missing.push(value);
+      if(!ez)this.missing.push(value);
     });
   },
   alreadyThere(id){
     this.already = false;
     console.log(this.table);
     for(let value of this.table){
-      if(value===id)this.already = true;
-    }
+      if(value===id)this.already = true;}
   },
   isFull(){
     console.log(`elemek szama ${this.table.length}`);
     this.full = this.table.length>=9 ? true: false;
-    if(this.full) {player.reset();click.notListening()};
+    if(this.full){
+      player.reset();
+      click.notListening()};
   },
-  pushValue(id){
+  tablePush(id){
+    table.table.push(id);
     if(player.player)this.humanTable.push(id);
     if(!player.player)this.aiTable.push(id);
-    //console logs
-    console.log('aitable:'+this.aiTable);console.log('humantable'+this.humanTable);
+      console.log('aitable:'+this.aiTable);
+      console.log('humantable'+this.humanTable);
   }
 }
 const ai={
-  random:0,array:[],j :0,
   moveGen(){
     let missingTable = table.missing;
     console.log("array : "+ai.array);
     let j=0;
-    missingTable.forEach(function(){
-      j++;
-    });
+    missingTable.forEach(()=>{j++});
     let length = j;
     let randomNumber = Math.floor(Math.random() * length);
-    
     console.log('ai random:' +randomNumber);
-    
     draw.execute(randomNumber);
   }
 }
 const draw = {
   level:0,
   checkCond(id){
-
     table.alreadyThere(id);
     if(table.already ===false)this.execute(id); 
   },
   execute(id){
     console.log(id);
     let pos=0;
-    
     if(player.player)document.getElementById(id).innerHTML = player.currentSign;
     else if(!player.player){
       //const player = player.player;
@@ -131,20 +120,16 @@ const draw = {
     }
      draw.level = draw.level+1;
      console.log("hanyadik szint: "+draw.level);
-    if(player.player){
-      table.table.push(id);
-      table.pushValue(id);
-    }
-    if(!player.player){
-      table.table.push(pos);
-      table.pushValue(pos);
-    }
-    if(player.player)table.emptySpace();
+    if(player.player)
+      table.tablePush(id);
+    if(!player.player)
+      table.tablePush(pos);
+    if(player.player)
+      table.emptySpace();
     console.log(table.table);
     if(draw.level>=5)term.check();
-    
     player.switchOver();
-    table.isFull(); //ki kell dolgozni majd
+    table.isFull(); 
     if(!player.player && !term.isTerm){
       ai.moveGen();
     }
