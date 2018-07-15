@@ -1,14 +1,33 @@
 'use strict'
 
 const click = {
+  start : false,
+  firstCheck(){
+
+  },
+
   listening(){
     let id = event.toElement.id; 
-    id = parseInt(id);
+    console.log(id);
     let clicked = event.target.className;
-    if(clicked=='square' )draw.checkCond(id);
+    if(id=='start' || click.start===true ){
+      console.log('valasztas');
+      click.start=true;
+      if(player.player && clicked=='square' ){
+        console.log('human kezd');
+        id = parseInt(id);
+        draw.checkCond(id);
+      }
+      if(player.player===false && term.isTerm===false){
+        console.log("ai kezd");
+        table.emptySpace();
+        ai.easy();
+      }
+    }
+    
   },
   notListening(){
-    window.removeEventListener('click',click.listening);
+    window.removeEventListener('click',this.listening);
   }
 }
 //start button will be implemented, and that will trigger the draw.checkCond(id) function to take effect
@@ -77,13 +96,16 @@ const table = {
     console.log(`elemek szama ${this.table.length}`);
     this.full = this.table.length>=9 ? true: false;
     if(this.full){
+      if(term.isTerm===false){
+        console.log(`it's a tie`);
+      }
       player.reset();
       click.notListening()};
   },
   tablePush(id){
     table.table.push(id);
     if(player.player)this.humanTable.push(id);
-    if(!player.player)this.aiTable.push(id);
+    if(player.player===false)this.aiTable.push(id);
       console.log('aitable:'+this.aiTable);
       console.log('humantable'+this.humanTable);
   }
@@ -98,6 +120,10 @@ const ai={
     let randomNumber = Math.floor(Math.random() * length);
     console.log('ai random:' +randomNumber);
     draw.execute(randomNumber);
+  },
+  minMax(){
+    let missingTable = table.missing;
+
   }
 }
 const draw = {
