@@ -22,7 +22,7 @@ const click = {
                 console.log("ai kezd");
                 table.emptySpace();
                 if(player.choosen==='easy')ai.easy();
-                else hard.orBoard();
+
             }
         }
     },
@@ -33,7 +33,7 @@ const click = {
 //start button will be implemented, and that will trigger the draw.checkCond(id) function to take effect
 //before that the set up of the player will take place based on provided settings via the modal UI
 const player={
-    currentSign:'O',player :true, hSign:'O', aiSign:'X',choosen:'easy',
+    currentSign:'O',player :false, hSign:'O', aiSign:'X',choosen:'hard',
     set signs(sign){
         this.hSign = 'O';
         this.aiSign = this.hSign==='O' ? 'X' : 'O';
@@ -125,59 +125,89 @@ const table = {
 }
 let hardAi = {
     origboard:['O',1 ,'X','X',4 ,'X', 6 ,'O','O'],player:true,winComb:[],aiPieces:0,humanPieces:0,winner:'',level:0,
-    huSign:'X',aiSign:'0',
-    basicSet(){
-        this.huSign=player.hSign;
-        this.aiSign=player.aiSign;
-        this.aiTable=[...table.aiTable];
-        this.humanTable=[...table.humanTable];
-        this.winComb=[...table.tableFull];
+    hSign:'X',aiSign:'0',fc:0,bestSpot:[],
+    bestSpotSetter(){
+        this.bestSpot = this.minimax(this.origboard,aiSign);
     },
-
-    minimax(){
+    emptyInd(board){
+        return board.filter(i=>i!='O' &&i !='X')
+    },
+    winning(board,player){
+        let ai=(item)=>{
+            if (this.aiTable.includes(item)) this.aiPieces++;
+            if (term.aiValue >= 3)
+                return true;
+            else
+                return false;
+        }
+        let h=(item)=>{
+            if (this.humanTable.includes(item)) this.humanPieces++;
+            if (this.humanPieces >= 3)
+                return true;
+            else
+                return false;
+        }
+        this.aiPieces=0;
+        this.humanPieces=0;
+        term.termState.forEach((value) => {
+            value.forEach((item) => {
+                if(player===aiSign)
+                    ai(item);
+                if(player===hSign)
+                    h(item);
+            });
+        });
+    },
+    minimax(newBoard,player){
+        this.fc++;
         let availSpots = emptyIndexies(newBoard);
-        if (winning(newBoard, huPlayer)){
+        if (winning(newBoard, hSign)){
             return {score:-10};
         }
-        else if (winning(newBoard, aiPlayer)){
+        else if (winning(newBoard, aiSign)){
             return {score:10};
         }
         else if (availSpots.length === 0){
             return {score:0};
         }
-    },
+        let moves = [];
+        availSpots.forEach((value)=> {
+            let move = {};
+            move.index = newBoard[availSpots[value]];
+            newBoard[availSpots[value]] = player;
 
-    isPlayer(value){
-        this.player = value;
-    },
-    /*original(tableorigBoard){
-        this.origBoard = [...table.origBoard];
-        k.ki(`origboard : ${this.origBoard}`);
-    },*/
-    checkTerm(player) {
-        term.termState.forEach((value) => {
-            this.aiPieces = 0;
-            this.humanPieces = 0;
-            value.forEach((item) => {
-                if (this.aiTable.includes(item)) this.aiPieces++;
-                if (this.humanTable.includes(item)) this.humanPieces++;
-                if (this.humanPieces >= 3) {
+            if (player === aiSign)
+                move.score = minimax(newBoard, huSign).score;
+            else
+                move.score =  minimax(newBoard, aiSign).score;
+            newBoard[availSpots[value]] = move.index;
+            if ((player === aiSign && move.score === 10) || (player === huSign && move.score === -10))
+                return move;
+            else
+                moves.push(move);
+        });
 
-                    term.isTerm = true;
-                }
-                if (term.aiValue >= 3) {
-
-                    term.isTerm = true;
+        let bestMove, bestScore;
+        if (player === aiSign) {
+            bestScore = -1000;
+            moves.forEach((value)=> {
+                if (moves[value].score > bestScore) {
+                    [moves[value].score,bestScore] = [bestScore,moves[value].score];
                 }
             });
-        });
+        }
+        else {
+            bestScore = 1000;
+            moves.forEach((value)=>{
+                if (moves[value].score < bestScore) {
+                    [moves[value].score,bestScore] = [bestScore,moves[value].score];
+                }
+            });
+        }
+
+        return moves[bestMove];
     },
-    emptyInd(board){
-        return board.filter(i=>i!='O' &&i !='X')
-    }
 }
-
-
 const ai={
     easy(){
         let missingTable = [...table.missing];
@@ -226,7 +256,7 @@ const draw = {
             if(player.choosen=='easy')
                 ai.easy();
             if(player.choosen=='hard')
-                hard.orBoard();
+                hard.basicSet();
         }
     }
 }
