@@ -33,7 +33,7 @@ const click = {
 //start button will be implemented, and that will trigger the draw.checkCond(id) function to take effect
 //before that the set up of the player will take place based on provided settings via the modal UI
 const player={
-    currentSign:'X',player :true, hSign:'X', aiSign:'O',choosen:'easy',
+    currentSign:'O',player :true, hSign:'O', aiSign:'X',choosen:'easy',
     set signs(sign){
         this.hSign = 'O';
         this.aiSign = this.hSign==='O' ? 'X' : 'O';
@@ -123,11 +123,60 @@ const table = {
         console.log('humantable'+this.humanTable);
     }
 }
-const hard = {
-    minMax(){
+let hardAi = {
+    origboard:['O',1 ,'X','X',4 ,'X', 6 ,'O','O'],player:true,winComb:[],aiPieces:0,humanPieces:0,winner:'',level:0,
+    huSign:'X',aiSign:'0',
+    basicSet(){
+        this.huSign=player.hSign;
+        this.aiSign=player.aiSign;
+        this.aiTable=[...table.aiTable];
+        this.humanTable=[...table.humanTable];
+        this.winComb=[...table.tableFull];
+    },
 
+    minimax(){
+        let availSpots = emptyIndexies(newBoard);
+        if (winning(newBoard, huPlayer)){
+            return {score:-10};
+        }
+        else if (winning(newBoard, aiPlayer)){
+            return {score:10};
+        }
+        else if (availSpots.length === 0){
+            return {score:0};
+        }
+    },
+
+    isPlayer(value){
+        this.player = value;
+    },
+    /*original(tableorigBoard){
+        this.origBoard = [...table.origBoard];
+        k.ki(`origboard : ${this.origBoard}`);
+    },*/
+    checkTerm(player) {
+        term.termState.forEach((value) => {
+            this.aiPieces = 0;
+            this.humanPieces = 0;
+            value.forEach((item) => {
+                if (this.aiTable.includes(item)) this.aiPieces++;
+                if (this.humanTable.includes(item)) this.humanPieces++;
+                if (this.humanPieces >= 3) {
+
+                    term.isTerm = true;
+                }
+                if (term.aiValue >= 3) {
+
+                    term.isTerm = true;
+                }
+            });
+        });
+    },
+    emptyInd(board){
+        return board.filter(i=>i!='O' &&i !='X')
     }
 }
+
 
 const ai={
     easy(){
