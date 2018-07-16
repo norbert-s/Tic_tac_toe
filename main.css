@@ -1,39 +1,39 @@
 
 #modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
 }
 
 /* Modal Content/Box */
 #content{
-  position:relative;
-  background-color: #fefefe;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
-    margin: 5% auto; 
+    position:relative;
+    background-color: #fefefe;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40vw; 
+    width: 40vw;
     text-align:center;
-  border-radius:5px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  -webkit-animation-name: animatetop;
+    border-radius:5px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
     -webkit-animation-duration: s;
     animation-name: animatetop;
     animation-duration: s;
 }
 /* Add Animation */
 @-webkit-keyframes animatetop {
-    from {top:-300px; opacity:0} 
+    from {top:-300px; opacity:0}
     to {top:0; opacity:1}
 }
 
@@ -47,7 +47,7 @@
     float: right;
     font-size: 28px;
     font-weight: bold;
-  display:none;
+    display:none;
 }
 
 #close:hover,
@@ -59,64 +59,63 @@
 
 /* modal main*/
 #text1{
-  font-size:4vw;
+    font-size:4vw;
 }
 /*x or y */
 #choice{
-  margin:auto;
-  width:30vw;
-  display:inline-grid;
-  grid-template-columns: 1fr 1fr;
-  font-size:7vw;
-  column-gap:10%;
+    margin:auto;
+    width:30vw;
+    display:inline-grid;
+    grid-template-columns: 1fr 1fr;
+    font-size:7vw;
+    column-gap:10%;
 }
 #x,#o{
-  display:grid;
-  border:solid 3px;
-  height: 50%;
-  align-self:center;
-  justify-items:center;
-  align-items:center;
-  font-family: 'Shrikhand', cursive;
-  
+    display:grid;
+    border:solid 3px;
+    height: 50%;
+    align-self:center;
+    justify-items:center;
+    align-items:center;
+    font-family: 'Shrikhand', cursive;
+
 }
 #x:hover,#o:hover{
-  background:gray;
-  cursor:pointer;
+    background:gray;
+    cursor:pointer;
 }
 #text2{
-  display:none;
+    display:none;
 }
 
 #container{
-  width: 300px;
-  height:300px;
-  margin:0 auto;
-  margin-top:100px;
+    width: 300px;
+    height:300px;
+    margin:0 auto;
+    margin-top:100px;
 }
 #wrap{
-  margin:0;
-  padding:0;
-  z-index:1;
-  display:grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
-  max-width: 100%;
-  height: 100%;
-  margin: auto;
-  border: 5px solid yellow ;
-  
+    margin:0;
+    padding:0;
+    z-index:1;
+    display:grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    max-width: 100%;
+    height: 100%;
+    margin: auto;
+    border: 5px solid yellow ;
 }
 
 .square{
-  border:solid;
-  border:1px solid lightblue;
-  background-color:Wheat;
-  height:100%;
-  display:grid;
-  text-align:center;
-  align-self:center;
-	justify-items:center;
-	align-items:center;
+    border:solid;
+    border:1px solid lightblue;
+    background-color:Wheat;
+    height:100%;
+    display:grid;
+    text-align:center;
+    align-self:center;
+    justify-items:center;
+    align-items:center;
 }
 

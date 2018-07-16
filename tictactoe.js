@@ -2,11 +2,13 @@
 
 const click = {
     start : false,
-    firstCheck(){
-    },
     listening(){
         let id = event.toElement.id;
         console.log(id);
+        if(id==='which'){
+            id.innerHTML='O';
+        }
+
         let clicked = event.target.className;
         if(id=='start' || click.start===true ){
             console.log('valasztas');
@@ -19,7 +21,8 @@ const click = {
             if(player.player===false && term.isTerm===false){
                 console.log("ai kezd");
                 table.emptySpace();
-                ai.easy();
+                if(player.choosen==='easy')ai.easy();
+                else hard.orBoard();
             }
         }
     },
@@ -30,7 +33,7 @@ const click = {
 //start button will be implemented, and that will trigger the draw.checkCond(id) function to take effect
 //before that the set up of the player will take place based on provided settings via the modal UI
 const player={
-    currentSign:'X',player :false, hSign:'X', aiSign:'O',choosen:'easy',
+    currentSign:'X',player :true, hSign:'X', aiSign:'O',choosen:'easy',
     set signs(sign){
         this.hSign = 'O';
         this.aiSign = this.hSign==='O' ? 'X' : 'O';
@@ -59,22 +62,28 @@ const term= {
                 if(table.humanTable.includes(item)) term.humanValue++;
                 if(term.humanValue >=3){
                     term.winner='human';
-                    console.log('nyertes: '+this.winner);
                     term.isTerm = true;
-                    click.notListening();
                 }
                 if(term.aiValue >=3){
                     term.winner='ai';
-                    console.log('nyertes: '+this.winner);
                     term.isTerm = true;
-                    click.notListening();
                 }
             });
         });
+        if(term.isTerm)term.termEnd();
+    },
+
+    termEnd(){
+        click.notListening();
+        this.callMsg();
+    },
+    callMsg(){
+        console.log(`a nyertes : ${this.winner}`);
     }
 }
 const table = {
-    full : false, already : false, table : [], aiTable:[], humanTable:[], tableFull : [1,2,3,4,5,6,7,8,9], missing : [],
+    full : false, already : false, table : [], aiTable:[], humanTable:[],
+    tableFull : [1,2,3,4,5,6,7,8,9], missing : [], origBoard:[1,2,3,4,5,6,7,8,9],
     emptySpace(){
         let tableCopy = this.table.map(value=>parseInt(value));
         table.missing = [];
@@ -93,34 +102,29 @@ const table = {
         console.log(`elemek szama ${this.table.length}`);
         this.full = this.table.length>=9 ? true: false;
         if(this.full){
-            if(term.isTerm===false){
-                console.log(`it's a tie`);
-            }
+
             player.reset();
             click.notListening()};
     },
     tablePush(id){
         table.table.push(id);
-        if(player.player)this.humanTable.push(id);
-        if(player.player===false)this.aiTable.push(id);
+        if(player.player){
+            this.humanTable.push(id);
+            this.origBoard[id-1]=player.hSign;
+            console.log('origboard'+this.origBoard);
+        }
+        if(player.player===false){
+            this.aiTable.push(id);
+            this.origBoard[id-1]=player.aiSign;
+            console.log('origboard'+this.origBoard);
+        }
+
         console.log('aitable:'+this.aiTable);
         console.log('humantable'+this.humanTable);
     }
 }
-const minMax={
-    isMaxPlayer:true,depth:0,node:0,
-    aiTable: [],humanTable:[],missing:[],
-    checkNextTerm(){
-        minMax.aiTable = [...table.aiTable];
-        minMax.missing = [...table.missing];
-        table.aiTable.forEach(value=>{
-
-        });
-    },
-
-    vmi(){
-
-
+const hard = {
+    minMax(){
 
     }
 }
@@ -172,10 +176,10 @@ const draw = {
         if(!player.player && !term.isTerm){
             if(player.choosen=='easy')
                 ai.easy();
-            if(player.choosen=='difficult')
-                ai.minMax();
+            if(player.choosen=='hard')
+                hard.orBoard();
         }
     }
 }
 /*window.onload = modals.startIntroModal()*/
-window.onload = function(){window.addEventListener('click',click.listening)};
+window.onload = ()=>{window.addEventListener('click',click.listening)};
