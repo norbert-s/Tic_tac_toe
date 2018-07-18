@@ -22,7 +22,7 @@
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40vw;
+    width: 60vw;
     text-align:center;
     border-radius:5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -58,8 +58,8 @@
 }
 
 /* modal main*/
-#text1{
-    font-size:4vw;
+#text1,#text4{
+    font-size:3vw;
 }
 /*x or y */
 #choice{
@@ -70,7 +70,7 @@
     font-size:7vw;
     column-gap:10%;
 }
-#x,#o{
+#text2,#text3,#text5,#text6{
     display:grid;
     border:solid 3px;
     height: 50%;
@@ -78,15 +78,14 @@
     justify-items:center;
     align-items:center;
     font-family: 'Shrikhand', cursive;
+    font-size: 2vw;
 
 }
-#x:hover,#o:hover{
+#text2:hover,#text3:hover,#text5:hover,#text6:hover{
     background:gray;
     cursor:pointer;
 }
-#text2{
-    display:none;
-}
+
 
 #container{
     width: 300px;

@@ -5,54 +5,118 @@ const click = {
     listening(){
         let id = event.toElement.id;
         console.log(id);
-        if(id==='which'){
-            id.innerHTML='O';
+        if(id==="text2")p.p=false;
+        if(id==='text3')p.p=true;
+        if(id==='text5'){
+            if(p.p===true){
+                p.hSign='X';
+                p.aiSign='O';
+            }
+            else {
+                p.hSign='O';
+                p.aiSign='X';
+            }
+        }
+        if(id==='text6'){
+            if(p.p===true){
+                p.hSign='O';
+                p.aiSign='X';
+            }
+            else {
+                p.hSign='X';
+                p.aiSign='O';
+            }
+        }
+        if(id==="close"){
+            modals.stopIntroModal();
+            click.reListen();
+        }
+        let clicked = event.target.className;
+        if(id==='settings'){
+            modals.toBegin();
+            p.reset();
         }
 
-        let clicked = event.target.className;
         if(id=='start' || click.start===true ){
             console.log('valasztas');
             click.start=true;
-            if(player.player && clicked=='square' ){
+            if(p.p && clicked=='square' ){
                 console.log('human kezd');
                 id = parseInt(id);
                 draw.checkCond(id);
             }
-            if(player.player===false && term.isTerm===false){
+            if(p.p===false && term.isTerm===false){
                 console.log("ai kezd");
                 table.emptySpace();
-                if(player.choosen==='easy')ai.easy();
-
+                if(p.choosen==='easy')rand.easy();
             }
         }
     },
+    reListen(){
+        let all= document.getElementsByClassName('square');
+        console.log(all);
+        for(let i of all){
+            i.addEventListener('click',click.listening);
+        }
+    },
     notListening(){
-        window.removeEventListener('click',this.listening);
+        let all= document.getElementsByClassName('square');
+        console.log(all);
+        for(let i of all){
+            i.removeEventListener('click',click.listening);
+        }
     }
 }
+// modal object, all of the modals attributes are on this object
+const modals = {
+    modal : document.getElementById("modal"),
+    $text1 : document.getElementById("text1"),
+    $text2 : document.getElementById("text2"),
+    $text3 : document.getElementById("text3"),
+    $text4 : document.getElementById("text4"),
+    $text5 : document.getElementById("text5"),
+    $text6 : document.getElementById("text6"),
+
+    stopIntroModal(){this.styling("modal","none")},
+    deleteXO(){
+        this.styling("x","none");
+        this.styling("o","none");
+    },
+    activate(){
+        this.styling("close","block");
+        this.styling("text2","block");
+    },
+    toBegin(){
+        this.styling("modal","block");
+        this.styling("close","block");
+        this.msgConst(this.$text1,'Who starts?');
+        this.msgConst(this.$text2,'Computer');
+        this.msgConst(this.$text3,'Player');
+        this.msgConst(this.$text4,'Which one will you choose?');
+        this.msgConst(this.$text5,'X');
+        this.msgConst(this.$text6,'O');
+    },
+    tie(){
+        this.styling("modal","block");
+        this.styling("close","block");
+        this.msgConst(this.$text1,`it's a tie?`);
+    },
+
+    draw(){this.msgConst("It's a draw")},
+    aiWon(){this.msgConst("Ai have won","Do you want to play again?")},
+    youWon(){this.msgConst("You've won!! Congrats")},
+    styling(st1,st2){document.getElementById(st1).style.display = st2;},
+    msgConst(value,value1){
+        value.innerHTML = value1;
+    }
+}
+
 //start button will be implemented, and that will trigger the draw.checkCond(id) function to take effect
-//before that the set up of the player will take place based on provided settings via the modal UI
-const player={
-    currentSign:'O',player :false, hSign:'O', aiSign:'X',choosen:'hard',
-    set signs(sign){
-        this.hSign = 'O';
-        this.aiSign = this.hSign==='O' ? 'X' : 'O';
-    },
-    switchOver(){
-        if(this.player)
-            this.player=false;
-        else this.player=true;
-        if(this.currentSign=='X')
-            this.currentSign='O';
-        else this.currentSign='X';
-    },
-    reset(){
-    }
-}
+
 const term= {
     termState : [[1,2,3],[4,5,6],[7,8,9],[1,5,9],[3,5,7],[1,4,7],[2,5,8],[3,6,9]],isTerm : false,whoMoved:'',aiValue:0,humanValue:0,winner:'',
     check(){
-        console.log('isplayer: '+player.player);
+        console.log('isp: '+p.p);
         this.termState.forEach((value)=>{
             this.aiValue = 0;
             this.humanValue=0;
@@ -78,12 +142,41 @@ const term= {
         this.callMsg();
     },
     callMsg(){
+
         console.log(`a nyertes : ${this.winner}`);
+    }
+}
+//before that the set up of the p will take place based on provided settings via the modal UI
+const p={ //player
+    currentSign:'X',p :true, hSign:'O', aiSign:'X',choosen:'easy',
+    /*set init(sign){
+        this.aiSign = sign;
+        this.hSign = this.aiSign==='O' ? 'X' : 'O';
+    },*/
+    switchOver(){
+        if(this.p)
+            this.p=false;
+        else this.p=true;
+        if(this.currentSign=='X')
+            this.currentSign='O';
+        else this.currentSign='X';
+    },
+    reset(){
+        table.aiTable=[],table.humanTable=[],table.missing=[],table.table=[],click.start=false,
+            term.isTerm=false,table.full=false;
+        let all= document.getElementsByClassName('square');
+        console.log(all);
+
+        for(let i of all){
+            i.innerHTML = '';
+            i.removeEventListener('click',click.listening);
+        }
+
     }
 }
 const table = {
     full : false, already : false, table : [], aiTable:[], humanTable:[],
-    tableFull : [1,2,3,4,5,6,7,8,9], missing : [], origBoard:[1,2,3,4,5,6,7,8,9],
+    tableFull : [1,2,3,4,5,6,7,8,9], missing : [],
     emptySpace(){
         let tableCopy = this.table.map(value=>parseInt(value));
         table.missing = [];
@@ -102,113 +195,25 @@ const table = {
         console.log(`elemek szama ${this.table.length}`);
         this.full = this.table.length>=9 ? true: false;
         if(this.full){
-
-            player.reset();
             click.notListening()};
     },
     tablePush(id){
         table.table.push(id);
-        if(player.player){
+        if(p.p){
             this.humanTable.push(id);
-            this.origBoard[id-1]=player.hSign;
-            console.log('origboard'+this.origBoard);
+            //this.origBoard[id-1]=p.hSign;
+            //console.log('origboard'+this.origBoard);
         }
-        if(player.player===false){
+        if(p.p===false){
             this.aiTable.push(id);
-            this.origBoard[id-1]=player.aiSign;
-            console.log('origboard'+this.origBoard);
+            //this.origBoard[id-1]=p.aiSign;
+            //console.log('origboard'+this.origBoard);
         }
-
         console.log('aitable:'+this.aiTable);
         console.log('humantable'+this.humanTable);
     }
 }
-let hardAi = {
-    origboard:['O',1 ,'X','X',4 ,'X', 6 ,'O','O'],player:true,winComb:[],aiPieces:0,humanPieces:0,winner:'',level:0,
-    hSign:'X',aiSign:'0',fc:0,bestSpot:[],
-    bestSpotSetter(){
-        this.bestSpot = this.minimax(this.origboard,aiSign);
-    },
-    emptyInd(board){
-        return board.filter(i=>i!='O' &&i !='X')
-    },
-    winning(board,player){
-        let ai=(item)=>{
-            if (this.aiTable.includes(item)) this.aiPieces++;
-            if (term.aiValue >= 3)
-                return true;
-            else
-                return false;
-        }
-        let h=(item)=>{
-            if (this.humanTable.includes(item)) this.humanPieces++;
-            if (this.humanPieces >= 3)
-                return true;
-            else
-                return false;
-        }
-        this.aiPieces=0;
-        this.humanPieces=0;
-        term.termState.forEach((value) => {
-            value.forEach((item) => {
-                if(player===aiSign)
-                    ai(item);
-                if(player===hSign)
-                    h(item);
-            });
-        });
-    },
-    minimax(newBoard,player){
-        this.fc++;
-        let availSpots = emptyIndexies(newBoard);
-        if (winning(newBoard, hSign)){
-            return {score:-10};
-        }
-        else if (winning(newBoard, aiSign)){
-            return {score:10};
-        }
-        else if (availSpots.length === 0){
-            return {score:0};
-        }
-        let moves = [];
-        availSpots.forEach((value)=> {
-            let move = {};
-            move.index = newBoard[availSpots[value]];
-            newBoard[availSpots[value]] = player;
-
-            if (player === aiSign)
-                move.score = minimax(newBoard, huSign).score;
-            else
-                move.score =  minimax(newBoard, aiSign).score;
-            newBoard[availSpots[value]] = move.index;
-            if ((player === aiSign && move.score === 10) || (player === huSign && move.score === -10))
-                return move;
-            else
-                moves.push(move);
-        });
-
-        let bestMove, bestScore;
-        if (player === aiSign) {
-            bestScore = -1000;
-            moves.forEach((value)=> {
-                if (moves[value].score > bestScore) {
-                    [moves[value].score,bestScore] = [bestScore,moves[value].score];
-                }
-            });
-        }
-        else {
-            bestScore = 1000;
-            moves.forEach((value)=>{
-                if (moves[value].score < bestScore) {
-                    [moves[value].score,bestScore] = [bestScore,moves[value].score];
-                }
-            });
-        }
-
-        return moves[bestMove];
-    },
-}
-const ai={
+const rand={
     easy(){
         let missingTable = [...table.missing];
 
@@ -229,16 +234,16 @@ const draw = {
     execute(id){
         console.log(id);
         let pos=0;
-        let human = player.player;
-        console.log("ki ez , csak nem a player? :"+human);
-        if(human)document.getElementById(id).innerHTML = player.currentSign;
+        let human = p.p;
+        console.log("ki ez , csak nem a p? :"+human);
+        if(human)document.getElementById(id).innerHTML = p.hSign;
         else if(!human){
-            //const player = player.player;
+            //const p = p.p;
             console.log("id miutan random legeneralta: "+ id);
             console.log("missing table :" +table.missing);
             pos = table.missing[id];
             console.log("ahova ai jele kerul: "+pos);
-            document.getElementById(pos).innerHTML = player.currentSign;
+            document.getElementById(pos).innerHTML = p.aiSign;
         }
         draw.level = draw.level+1;
         console.log("hanyadik szint: "+draw.level);
@@ -250,15 +255,22 @@ const draw = {
             table.emptySpace();
         console.log(table.table);
         if(draw.level>=5)term.check();
-        player.switchOver();
-        table.isFull();
-        if(!player.player && !term.isTerm){
-            if(player.choosen=='easy')
-                ai.easy();
-            if(player.choosen=='hard')
-                hard.basicSet();
+        p.switchOver();
+        if(table.full && !term.isTerm){
+            p.reset();
+            modals.tie();
+        };
+        if(!p.p && !term.isTerm){
+            //if(p.choosen=='easy')
+                rand.easy();
+            /*if(p.choosen=='hard') {
+                let board = table.origBoard;
+                let missing = table.missing;
+                let sign = p.aiSign;
+                flow(sign, board,missing);
+            }*/
         }
     }
 }
-/*window.onload = modals.startIntroModal()*/
+window.onload = modals.toBegin();
 window.onload = ()=>{window.addEventListener('click',click.listening)};
