@@ -38,6 +38,7 @@ const click = {
         }
 
         if(id=='start' || click.start===true ){
+
             console.log('valasztas');
             click.start=true;
             if(p.p && clicked=='square' ){
@@ -125,7 +126,7 @@ const term= {
                 if(table.aiTable.includes(item)) term.aiValue++;
                 if(table.humanTable.includes(item)) term.humanValue++;
                 if(term.humanValue >=3){
-                    term.winner='human';
+                    term.winner='player';
                     term.isTerm = true;
                 }
                 if(term.aiValue >=3){
@@ -143,7 +144,7 @@ const term= {
     },
     callMsg(){
 
-        console.log(`a nyertes : ${this.winner}`);
+        document.getElementById('end').innerHTML= `a nyertes : ${this.winner}`;
     }
 }
 //before that the set up of the p will take place based on provided settings via the modal UI

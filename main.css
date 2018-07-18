@@ -117,4 +117,13 @@
     justify-items:center;
     align-items:center;
 }
-
+#end{
+    text-align:center;
+}
+#buttons{
+    margin-top:1em;
+    width:20vw;
+    margin:auto;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+}
