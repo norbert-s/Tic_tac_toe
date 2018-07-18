@@ -28,6 +28,14 @@ const click = {
             }
         }
         if(id==="close"){
+            let all= document.getElementsByClassName('square');
+            console.log(all);
+
+            for(let i of all){
+                i.innerHTML = '';
+
+            }
+
             modals.stopIntroModal();
             click.reListen();
         }
@@ -79,9 +87,13 @@ const modals = {
     $text6 : document.getElementById("text6"),
 
     stopIntroModal(){this.styling("modal","none")},
-    deleteXO(){
-        this.styling("x","none");
-        this.styling("o","none");
+    deleteBoxes(){
+        this.styling("text2","none");
+        this.styling("text3","none");
+        this.styling("text4","none");
+        this.styling("text","none");
+        this.styling("text2","none");
+        this.styling("text2","none");
     },
     activate(){
         this.styling("close","block");
@@ -100,8 +112,14 @@ const modals = {
     tie(){
         this.styling("modal","block");
         this.styling("close","block");
-        this.msgConst(this.$text1,`it's a tie?`);
+        this.msgConst(this.$text1,`it's a tie`);
     },
+    win(winner){
+        this.styling("modal","block");
+        this.styling("close","block");
+        this.msgConst(this.$text1,`${winner} nyert`);
+    },
+
 
     draw(){this.msgConst("It's a draw")},
     aiWon(){this.msgConst("Ai have won","Do you want to play again?")},
@@ -126,11 +144,11 @@ const term= {
                 if(table.aiTable.includes(item)) term.aiValue++;
                 if(table.humanTable.includes(item)) term.humanValue++;
                 if(term.humanValue >=3){
-                    term.winner='player';
+                    term.winner='Player';
                     term.isTerm = true;
                 }
                 if(term.aiValue >=3){
-                    term.winner='ai';
+                    term.winner='Computer';
                     term.isTerm = true;
                 }
             });
@@ -143,8 +161,10 @@ const term= {
         this.callMsg();
     },
     callMsg(){
+        click.notListening();
+        modals.win(this.winner);
+        p.reset()
 
-        document.getElementById('end').innerHTML= `a nyertes : ${this.winner}`;
     }
 }
 //before that the set up of the p will take place based on provided settings via the modal UI
@@ -165,11 +185,12 @@ const p={ //player
     reset(){
         table.aiTable=[],table.humanTable=[],table.missing=[],table.table=[],click.start=false,
             term.isTerm=false,table.full=false;
+        let msg=document.getElementById('end').innerHTML='';
         let all= document.getElementsByClassName('square');
         console.log(all);
 
         for(let i of all){
-            i.innerHTML = '';
+
             i.removeEventListener('click',click.listening);
         }
 
@@ -256,11 +277,15 @@ const draw = {
             table.emptySpace();
         console.log(table.table);
         if(draw.level>=5)term.check();
-        p.switchOver();
+        table.isFull();
         if(table.full && !term.isTerm){
-            p.reset();
+
             modals.tie();
+            p.reset();
         };
+        p.switchOver();
+
+
         if(!p.p && !term.isTerm){
             //if(p.choosen=='easy')
                 rand.easy();

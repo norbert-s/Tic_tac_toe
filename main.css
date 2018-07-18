@@ -19,10 +19,10 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
-    margin: 5% auto;
+    margin: 35% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 60vw;
+    width: 50vw;
     text-align:center;
     border-radius:5px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -59,7 +59,7 @@
 
 /* modal main*/
 #text1,#text4{
-    font-size:3vw;
+    font-size:2vw;
 }
 /*x or y */
 #choice{
@@ -78,7 +78,7 @@
     justify-items:center;
     align-items:center;
     font-family: 'Shrikhand', cursive;
-    font-size: 2vw;
+    font-size: 1vw;
 
 }
 #text2:hover,#text3:hover,#text5:hover,#text6:hover{
@@ -88,10 +88,10 @@
 
 
 #container{
-    width: 300px;
+    max-width: 500px;
     height:300px;
     margin:0 auto;
-    margin-top:100px;
+    margin-top:3%;
 }
 #wrap{
     margin:0;
