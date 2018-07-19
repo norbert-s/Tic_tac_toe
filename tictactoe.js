@@ -9,7 +9,6 @@ const click = {
         let game = document.getElementById('end').innerHTML;
         console.log(id);
         if(id==="text2"){
-
             p.p=false;
             document.getElementById('text2').style.backgroundColor='gray';
             document.getElementById('text3').style.backgroundColor='white';
@@ -33,7 +32,7 @@ const click = {
         }
         if(id==='settings'){
             let all= document.getElementsByClassName('square');
-            console.log(all);
+            //console.log(all);
             for(let i of all){
                 i.innerHTML = '';
             }
@@ -52,7 +51,6 @@ const click = {
                     document.getElementById('end').innerHTML=``;
                 },3000);
             }
-
             else{
                 document.getElementById('end').innerHTML=`Computer starts`;
                 setTimeout(function(){
@@ -62,27 +60,26 @@ const click = {
             modals.stopIntroModal();
             click.reListen();
             click.start=true;
-
-
         }
         if(click.start===true){
-            if(p.p && clicked=='square' ){
+            if(p.p && clicked=='square'  && !table.full ){
                 console.log('human kezd');
                 id = parseInt(id);
                 draw.checkCond(id);
-                
+                table.isFull();
             }
-            if(p.p===false && term.isTerm===false){
+            if(p.p===false &&  !table.full){
                 console.log("ai kezd");
                 table.emptySpace();
                 if(p.choosen==='easy')
                     rand.easy();
+                table.isFull();
             }
         }
     },
     reListen(){
         let all= document.getElementsByClassName('square');
-        console.log(all);
+        //console.log(all);
         for(let i of all){
             i.addEventListener('click',click.listening);
         }
@@ -90,7 +87,7 @@ const click = {
     notListening(){
         click.start=false;
         let all= document.getElementsByClassName('square');
-        console.log(all);
+        //console.log(all);
         for(let i of all){
             i.removeEventListener('click',click.listening);
         }
@@ -105,7 +102,6 @@ const modals = {
     $text4 : document.getElementById("text4"),
     $text5 : document.getElementById("text5"),
     $text6 : document.getElementById("text6"),
-
     stopIntroModal(){this.styling("modal","none")
         document.getElementById('content').style.backgroundColor='white;'
     },
@@ -146,8 +142,6 @@ const modals = {
         this.msgConst(this.$text1,`${winner} nyert.
         Who Starts?`);
     },*/
-
-
     /*draw(){this.msgConst("It's a draw")},
     aiWon(){this.msgConst("Ai have won","Do you want to play again?")},
     yo*/
@@ -157,9 +151,6 @@ const modals = {
     }
 }
 
-//start button will be implemented, and that will trigger the draw.checkCond(id) function to take effect
-
-//before that the set up of the p will take place based on provided settings via the modal UI
 const p={ //player
     currentSign:'X',p :true, hSign:'O', aiSign:'X',choosen:'easy',
     /*set init(sign){
@@ -177,9 +168,8 @@ const p={ //player
     reset(){
         table.aiTable=[],table.humanTable=[],table.missing=[],table.table=[],click.start=false,
             term.isTerm=false,table.full=false;
-
         let all= document.getElementsByClassName('square');
-        console.log(all);
+        //console.log(all);
 
         for(let i of all){
 
@@ -201,16 +191,20 @@ const table = {
     },
     alreadyThere(id){
         this.already = false;
-        console.log(this.table);
+        //console.log(this.table);
         for(let value of this.table){
             if(value===id)this.already = true;}
     },
     isFull(){
         console.log(`elemek szama ${this.table.length}`);
         this.full = this.table.length>=9 ? true: false;
-        if(this.full){
+        if(table.full ){
+            console.log("game over")
+        }
+        if(table.full){
+            document.getElementById('end').innerHTML = `It's a tie!`;
             term.isTerm=true;
-            click.notListening()
+            click.notListening();
         };
     },
     tablePush(id){
@@ -225,77 +219,75 @@ const table = {
             //this.origBoard[id-1]=p.aiSign;
             //console.log('origboard'+this.origBoard);
         }
-        console.log('aitable:'+this.aiTable);
-        console.log('humantable'+this.humanTable);
+        /*console.log('aitable:'+this.aiTable);
+        console.log('humantable'+this.humanTable);*/
     }
 }
 const term= {
     termState : [[1,2,3],[4,5,6],[7,8,9],[1,5,9],[3,5,7],[1,4,7],[2,5,8],[3,6,9]],isTerm : false,whoMoved:'',aiValue:0,humanValue:0,winner:'',
     check(){
-        console.log('isp: '+p.p);
+        console.log('is p: '+p.p);
         this.termState.forEach((value)=>{
             this.aiValue = 0;
             this.humanValue=0;
             value.forEach((item)=>{
-                console.log("terminal state check");
+                //console.log("terminal state check");
                 if(table.aiTable.includes(item)) term.aiValue++;
                 if(table.humanTable.includes(item)) term.humanValue++;
                 if(term.humanValue >=3){
                     term.winner='Player';
                     term.isTerm = true;
-                    console.log('player nyert')
+                    //console.log('player nyert')
                 }
                 if(term.aiValue >=3){
                     term.winner='Computer';
                     term.isTerm = true;
-                    console.log('comp nyert nyert')
+                    //console.log('comp nyert nyert')
                 }
             });
         });
         if(term.isTerm)term.termEnd();
     },
-
     termEnd() {
-        click.notListening();
         console.log(`${term.winner} nyert`);
         let x = document.getElementById('end');
         x.innerHTML= `${term.winner}  nyert`;
         click.notListening();
+        click.start=false;
     }
 }
 const rand={
     easy(){
         let missingTable = [...table.missing];
-
         let j=0;
         missingTable.forEach(()=>{j++});
         let length = j;
         let randomNumber = Math.floor(Math.random() * length);
         console.log('ai random:' +randomNumber);
-        if(!term.isTerm) {
+        if(!term.isTerm && !table.full) {
             draw.execute(randomNumber);
         }
-
     }
 }
 const draw = {
     level:0,
     checkCond(id){
         table.alreadyThere(id);
-        if(table.already ===false)this.execute(id);
+        if(table.already ===false && !term.isTerm && !table.full)this.execute(id);
     },
     execute(id){
-
-        console.log(id);
+        if(table.full ){
+            console.log("game over")
+        }
+        //console.log(id);
         let pos=0;
         let human = p.p;
         console.log("ki ez , csak nem a p? :"+human);
-        if(human)document.getElementById(id).innerHTML = p.hSign;
-        else if(!human && !term.isTerm){
+        if(p.p)document.getElementById(id).innerHTML = p.hSign;
+        else if(!p.p &&  !table.full){
             //const p = p.p;
-
-            console.log("id miutan random legeneralta: "+ id);
-            console.log("missing table :" +table.missing);
+            /*console.log("id miutan random legeneralta: "+ id);
+            console.log("missing table :" +table.missing);*/
             pos = table.missing[id];
             console.log("ahova ai jele kerul: "+pos);
             document.getElementById(pos).innerHTML = p.aiSign;
@@ -310,13 +302,10 @@ const draw = {
             table.emptySpace();
         console.log(table.table);
         if(draw.level>=5)term.check();
-
-        if(table.full && !term.isTerm){
-            document.getElementById('end').innerHTML=`It's a tie`;
-        };
-        if(term.isTerm) click.notListening();
+        table.isFull();
+        //if(term.isTerm) click.notListening();
         p.switchOver();
-        if(!p.p && !term.isTerm){
+        if(!p.p && !table.full ){
             //if(p.choosen=='easy')
             rand.easy();
             /*if(p.choosen=='hard') {
