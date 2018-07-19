@@ -201,9 +201,13 @@ const table = {
         if(table.full ){
             console.log("game over")
         }
-        if(table.full){
-            document.getElementById('end').innerHTML = `It's a tie!`;
-            term.isTerm=true;
+        if(table.full ){
+
+            if(!term.isTerm){
+                document.getElementById('end').innerHTML = `It's a tie!`;
+            }
+
+
             click.notListening();
         };
     },
