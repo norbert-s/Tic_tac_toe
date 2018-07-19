@@ -43,19 +43,19 @@ const click = {
         }
 
         let clicked = event.target.className;
-        if(id==='game' ){
+        if(id=='game' &&!term.isTerm && !table.full){
             console.log('valasztas');
             if(p.p){
                 document.getElementById('end').innerHTML=`Player starts`;
                 setTimeout(function(){
                     document.getElementById('end').innerHTML=``;
-                },3000);
+                },1500);
             }
             else{
                 document.getElementById('end').innerHTML=`Computer starts`;
                 setTimeout(function(){
                     document.getElementById('end').innerHTML=``;
-                },3000);
+                },1500);
             }
             modals.stopIntroModal();
             click.reListen();
@@ -201,7 +201,7 @@ const table = {
         if(table.full ){
             console.log("game over")
         }
-        if(table.full ){
+        if(table.full && !term.isTerm){
 
             if(!term.isTerm){
                 document.getElementById('end').innerHTML = `It's a tie!`;
