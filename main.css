@@ -61,7 +61,7 @@
     font-size:2vw;
 }
 /*x or y */
-#choice{
+.choice{
     margin:auto;
     width:30vw;
     display:inline-grid;

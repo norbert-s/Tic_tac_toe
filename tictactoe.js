@@ -6,21 +6,30 @@ const click = {
     listening(){
         let id = event.toElement.id;
         let style = event.toElement.style;
+
         console.log(id);
         if(id==="text2"){
             console.log(id);
             p.p=false;
+            document.getElementById('text2').style.backgroundColor='gray';
+            document.getElementById('text3').style.backgroundColor='white';
         }
         if(id==='text3') {
             p.p = true;
+            document.getElementById('text2').style.backgroundColor='white';
+            document.getElementById('text3').style.backgroundColor='gray';
         }
         if(id==='text5'){
-                p.hSign='X';
-                p.aiSign='O';
+            p.hSign='X';
+            p.aiSign='O';
+            document.getElementById('text5').style.backgroundColor='gray';
+            document.getElementById('text6').style.backgroundColor='white';
         }
         if(id==='text6'){
                 p.hSign='O';
                 p.aiSign='X';
+            document.getElementById('text6').style.backgroundColor='gray';
+            document.getElementById('text5').style.backgroundColor='white';
         }
         if(id==='settings'){
             let all= document.getElementsByClassName('square');
@@ -62,6 +71,7 @@ const click = {
         }
     },
     notListening(){
+        click.start=false;
         let all= document.getElementsByClassName('square');
         console.log(all);
         for(let i of all){
@@ -103,6 +113,10 @@ const modals = {
         this.msgConst(this.$text4,'Please choose your sign!');
         this.msgConst(this.$text5,'X');
         this.msgConst(this.$text6,'O');
+        document.getElementById('text2').style.backgroundColor='white';
+        document.getElementById('text3').style.backgroundColor='white';
+        document.getElementById('text5').style.backgroundColor='white';
+        document.getElementById('text6').style.backgroundColor='white';
     },
     /*tie(){
         this.styling("modal","block");
@@ -225,7 +239,7 @@ const term= {
         console.log(`${term.winner} nyert`);
         let x = document.getElementById('end');
         x.innerHTML= `${term.winner}  nyert`;
-
+        click.notListening();
     }
 }
 const rand={
@@ -274,6 +288,7 @@ const draw = {
         if(table.full && !term.isTerm){
             document.getElementById('end').innerHTML=`It's a tie`;
         };
+        if(term.isTerm) click.notListening();
         p.switchOver();
         if(!p.p && !term.isTerm){
                 //if(p.choosen=='easy')
@@ -288,4 +303,5 @@ const draw = {
     }
 }
 window.onload = modals.toBegin();
+//let square = document.addEventListener('click',click.square);
 window.onload = ()=>{window.addEventListener('click',click.listening)};
