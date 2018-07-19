@@ -15,26 +15,12 @@ const click = {
             p.p = true;
         }
         if(id==='text5'){
-
-            if(p.p===true){
                 p.hSign='X';
                 p.aiSign='O';
-            }
-            else {
-                p.hSign='O';
-                p.aiSign='X';
-            }
         }
         if(id==='text6'){
-
-            if(p.p===true){
                 p.hSign='O';
                 p.aiSign='X';
-            }
-            else {
-                p.hSign='X';
-                p.aiSign='O';
-            }
         }
         if(id==='settings'){
             let all= document.getElementsByClassName('square');
@@ -114,7 +100,7 @@ const modals = {
         this.msgConst(this.$text1,'Who starts?');
         this.msgConst(this.$text2,'Computer');
         this.msgConst(this.$text3,'Player');
-        this.msgConst(this.$text4,'Please choose!');
+        this.msgConst(this.$text4,'Please choose your sign!');
         this.msgConst(this.$text5,'X');
         this.msgConst(this.$text6,'O');
     },
