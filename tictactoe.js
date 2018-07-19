@@ -6,10 +6,10 @@ const click = {
     listening(){
         let id = event.toElement.id;
         let style = event.toElement.style;
-
+        let game = document.getElementById('end').innerHTML;
         console.log(id);
         if(id==="text2"){
-            console.log(id);
+
             p.p=false;
             document.getElementById('text2').style.backgroundColor='gray';
             document.getElementById('text3').style.backgroundColor='white';
@@ -26,8 +26,8 @@ const click = {
             document.getElementById('text6').style.backgroundColor='white';
         }
         if(id==='text6'){
-                p.hSign='O';
-                p.aiSign='X';
+            p.hSign='O';
+            p.aiSign='X';
             document.getElementById('text6').style.backgroundColor='gray';
             document.getElementById('text5').style.backgroundColor='white';
         }
@@ -40,20 +40,37 @@ const click = {
             modals.toBegin();
 
             p.reset();
-            document.getElementById('end').innerHTML='';
+            game='';
         }
 
         let clicked = event.target.className;
-        if(id==='game' || click.start===true){
+        if(id==='game' ){
             console.log('valasztas');
+            if(p.p){
+                document.getElementById('end').innerHTML=`Player starts`;
+                setTimeout(function(){
+                    document.getElementById('end').innerHTML=``;
+                },3000);
+            }
 
+            else{
+                document.getElementById('end').innerHTML=`Computer starts`;
+                setTimeout(function(){
+                    document.getElementById('end').innerHTML=``;
+                },3000);
+            }
             modals.stopIntroModal();
             click.reListen();
             click.start=true;
+
+
+        }
+        if(click.start===true){
             if(p.p && clicked=='square' ){
                 console.log('human kezd');
                 id = parseInt(id);
                 draw.checkCond(id);
+                
             }
             if(p.p===false && term.isTerm===false){
                 console.log("ai kezd");
@@ -192,7 +209,9 @@ const table = {
         console.log(`elemek szama ${this.table.length}`);
         this.full = this.table.length>=9 ? true: false;
         if(this.full){
-            click.notListening()};
+            term.isTerm=true;
+            click.notListening()
+        };
     },
     tablePush(id){
         table.table.push(id);
@@ -224,10 +243,12 @@ const term= {
                 if(term.humanValue >=3){
                     term.winner='Player';
                     term.isTerm = true;
+                    console.log('player nyert')
                 }
                 if(term.aiValue >=3){
                     term.winner='Computer';
                     term.isTerm = true;
+                    console.log('comp nyert nyert')
                 }
             });
         });
@@ -251,7 +272,10 @@ const rand={
         let length = j;
         let randomNumber = Math.floor(Math.random() * length);
         console.log('ai random:' +randomNumber);
-        draw.execute(randomNumber);
+        if(!term.isTerm) {
+            draw.execute(randomNumber);
+        }
+
     }
 }
 const draw = {
@@ -261,13 +285,15 @@ const draw = {
         if(table.already ===false)this.execute(id);
     },
     execute(id){
+
         console.log(id);
         let pos=0;
         let human = p.p;
         console.log("ki ez , csak nem a p? :"+human);
         if(human)document.getElementById(id).innerHTML = p.hSign;
-        else if(!human){
+        else if(!human && !term.isTerm){
             //const p = p.p;
+
             console.log("id miutan random legeneralta: "+ id);
             console.log("missing table :" +table.missing);
             pos = table.missing[id];
@@ -291,8 +317,8 @@ const draw = {
         if(term.isTerm) click.notListening();
         p.switchOver();
         if(!p.p && !term.isTerm){
-                //if(p.choosen=='easy')
-                rand.easy();
+            //if(p.choosen=='easy')
+            rand.easy();
             /*if(p.choosen=='hard') {
                 let board = table.origBoard;
                 let missing = table.missing;
