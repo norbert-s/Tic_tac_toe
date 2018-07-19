@@ -255,7 +255,7 @@ const term= {
     termEnd() {
         console.log(`${term.winner} nyert`);
         let x = document.getElementById('end');
-        x.innerHTML= `${term.winner}  nyert`;
+        x.innerHTML= `${term.winner} has won`;
         click.notListening();
         click.start=false;
     }
