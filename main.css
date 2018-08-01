@@ -135,6 +135,7 @@
     margin: auto;
     border:solid 1px;
     font-family: 'Vast Shadow', cursive;
+    cursor:pointer;
 }
 #settings:hover{
     background:gray;
