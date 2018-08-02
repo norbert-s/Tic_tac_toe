@@ -5,37 +5,39 @@ const click = {
         let id = event.toElement.id;
         let style = event.toElement.style;
         let game = document.getElementById('end').innerHTML;
+
         console.log(id);
         if(id==="text2"){
-            p.setP(false);
+            p.setP=false;
             click.bgColor('text2','gray');
             click.bgColor('text3','white');
         }
         if(id==='text3') {
-            p.setP(true);
+            p.setP=true;
             click.bgColor('text2','white');
             click.bgColor('text3','gray');
         }
         if(id==='text5'){
-            p.setHS('X');
-            p.setAiS('O');
+            p.setHS='X';
+            p.setAiS='O';
             click.bgColor('text5','gray');
             click.bgColor('text6','white');
         }
         if(id==='text6'){
-            p.setHS('O');
-            p.setAiS('X');
+            p.setHS='O';
+            p.setAiS='X';
             click.bgColor('text6','gray');
             click.bgColor('text5','white');
         }
         if(id==='settings'){
             let all= document.getElementsByClassName('square');
-            //console.log(all);
             for(let i of all){
                 i.innerHTML = '';
             }
             modals.toBegin();
+            //
             p.reset();
+
             game='';
         }
 
@@ -82,19 +84,20 @@ const click = {
     },
     reListen(){
         let all= document.getElementsByClassName('square');
-        //console.log(all);
         for(let i of all){
             i.addEventListener('click',click.listening);
         }
     },
     notListening(){
-        click.start=false;
+        //this.reset();
         let all= document.getElementsByClassName('square');
-        //console.log(all);
         for(let i of all){
             i.removeEventListener('click',click.listening);
         }
     },
+    reset(){
+        this.start=false;
+    }
 
 }
 // modal object, all of the modals attributes are on this object

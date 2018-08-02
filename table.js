@@ -27,21 +27,21 @@ const table = {
                 document.getElementById('end').innerHTML = `It's a tie!`;
             }
             click.notListening();
+            click.reset();
         };
     },
     tablePush(id){
         table.table.push(id);
         if(p.p){
             this.humanTable.push(id);
-            //this.origBoard[id-1]=p.hSign;
-            //console.log('origboard'+this.origBoard);
         }
         if(p.p===false){
             this.aiTable.push(id);
-            //this.origBoard[id-1]=p.aiSign;
-            //console.log('origboard'+this.origBoard);
         }
-        /*console.log('aitable:'+this.aiTable);
-        console.log('humantable'+this.humanTable);*/
+
+    }
+    ,
+    reset(){
+        this.aiTable=[],this.humanTable=[],this.missing=[],this.table=[],this.full=false;
     }
 }

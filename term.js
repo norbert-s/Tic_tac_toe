@@ -29,6 +29,9 @@ const term= {
         let x = document.getElementById('end');
         x.innerHTML= `${term.winner} won`;
         click.notListening();
-        click.start=false;
+        click.reset();
+    },
+    reset(){
+        this.isTerm=false;
     }
 }

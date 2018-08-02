@@ -1,35 +1,36 @@
 'use strict'
+// noinspection JSAnnotator
 const p={ //player
+    // 'p' variable is for determining which player is the current one, if its true its the player
     currentSign:'X',p :true, hSign:'O', aiSign:'X',choosen:'easy',
-    /*set init(sign){
-        this.aiSign = sign;
-        this.hSign = this.aiSign==='O' ? 'X' : 'O';
-    },*/
-    setP(value){
+    set setP(value){
         this.p = value;
     },
-    setHS(sign){
+    set setHS(sign){
         this.hSign = sign;
     },
-    setAiS(sign){
+    set setAiS(sign){
         this.aiSign = sign;
+    },
+    set setCurr(sign){
+        this.currentSign=sign;
+    },
+    getAll(value){
+        return this.value;
     },
     switchOver(){
         if(this.p)
-            this.p=false;
-        else this.p=true;
+            this.setP=false;
+        else this.setP=true;
         if(this.currentSign=='X')
-            this.currentSign='O';
-        else this.currentSign='X';
+            this.setCurr='O';
+        else this.setCurr='X';
     },
     reset(){
-        table.aiTable=[],table.humanTable=[],table.missing=[],table.table=[],click.start=false,
-            term.isTerm=false,table.full=false;
-        let all= document.getElementsByClassName('square');
-        //console.log(all);
-        for(let i of all){
-            i.removeEventListener('click',click.listening);
-        }
+        table.reset();
+        term.reset();
+        click.reset();
+        click.notListening();
     }
 }
 
